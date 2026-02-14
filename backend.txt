@@ -1,0 +1,14 @@
+backend/
+├── app/
+│   ├── main.py
+│   ├── api/
+│   │   ├── auth.py
+│   │   ├── upload.py
+│   │   └── products.py
+│   ├── core/
+│   │   ├── security.py
+│   │   ├── storage.py
+│   │   └── config.py
+│   └── models/
+├── migrations/
+└── requirements.txt

@@ -1,0 +1,51 @@
+frontend/
+├── app/
+│   ├── seller/
+│   │   └── page.tsx                 # AI-powered product creation (already built)
+│   │
+│   ├── marketplace/
+│   │   ├── page.tsx                 # All products (grid + search)
+│   │   └── [...category]/
+│   │       └── page.tsx             # Category drilldown (Fashion / Shoes / Running)
+│   │
+│   ├── product/
+│   │   └── [id]/
+│   │       └── page.tsx             # Product detail page
+│   │
+│   ├── auth/
+│   │   ├── signup/
+│   │   │   └── page.tsx             # Choose Seller / Buyer / Both
+│   │   └── login/
+│   │       └── page.tsx
+│   │
+│   ├── layout.tsx                   # Global layout (nav, footer)
+│   └── page.tsx                     # Landing / redirect
+│
+├── components/
+│   ├── UploadDropzone.tsx
+│   ├── ProductPreview.tsx
+│   ├── AttributeEditor.tsx
+│   ├── SecurityBadge.tsx
+│   ├── ActionBar.tsx
+│   │
+│   ├── ProductCard.tsx              # Marketplace grid item
+│   ├── ProductGrid.tsx              # Responsive grid
+│   ├── CategoryBreadcrumb.tsx       # Fashion → Shoes → Running
+│   ├── SearchBar.tsx                # Smart search input
+│   ├── FilterPanel.tsx              # Color / material / price
+│   ├── ReviewList.tsx               # Product reviews
+│   ├── ReviewForm.tsx               # Write review (guarded)
+│   └── RoleBadge.tsx                # Seller / Buyer indicator
+│
+├── lib/
+│   ├── api.ts                       # fake APIs (later FastAPI)
+│   ├── types.ts                     # ALL shared contracts
+│   ├── mockData.ts                  # mock products, users, reviews
+│   ├── search.ts                    # smart search logic (frontend)
+│   └── auth.ts                      # role + bot gating (frontend)
+│
+├── styles/
+│   └── globals.css
+│
+└── public/
+    └── assets/
