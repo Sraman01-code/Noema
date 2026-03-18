@@ -1,0 +1,13 @@
+# Node / Next.js
+frontend/app/node_modules/
+frontend/app/.next/
+npm-debug.log*
+
+# Python
+backend/.venv/
+backend/app/__pycache__/
+backend/app/api/__pycache__/
+*.pyc
+
+# Local runtime data
+backend/uploads/product-images/*

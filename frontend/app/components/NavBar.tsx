@@ -9,7 +9,7 @@ export default function NavBar() {
   return (
     <nav className="flex items-center justify-between px-6 py-4 border-b border-neutral-800 relative z-20">
       <div className="flex gap-6">
-        <Link href="/" className="font-bold hover:text-indigo-400 transition">Marketplace</Link>
+        <Link href="/marketplace" className="font-bold hover:text-indigo-400 transition">Marketplace</Link>
         <Link href="/marketplace" className="hover:text-indigo-400 transition">Browse</Link>
 
         {user?.role === "seller" && (

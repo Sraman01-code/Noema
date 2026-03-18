@@ -4,9 +4,9 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { getProducts } from "@/lib/productStore";
-import type { Product } from "@/lib/types";
+import type { Product, Review as StoredReview } from "@/lib/types";
 import ProductCard from "@/components/ProductCard";
-import ReviewList, { Review } from "@/components/ReviewList";
+import ReviewList, { Review as ReviewCard } from "@/components/ReviewList";
 import PurchaseModal from "@/components/PurchaseModal";
 import { Star, History, Trash2, CheckCircle, Download, X, ShoppingCart } from "lucide-react";
 import { QRCodeCanvas } from "qrcode.react";
@@ -30,7 +30,7 @@ export default function BuyerPage() {
   // -- State Management --
   const [isMounted, setIsMounted] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
-  const [reviewsDB, setReviewsDB] = useState<Record<string, Review[]>>({});
+  const [reviewsDB, setReviewsDB] = useState<Record<string, StoredReview[]>>({});
   const [newReview, setNewReview] = useState<Record<string, { rating: number; comment: string }>>({});
   const [bought, setBought] = useState<PurchasedProduct[]>([]);
   
@@ -103,7 +103,7 @@ export default function BuyerPage() {
       return;
     }
 
-    const review: Review = {
+    const review: StoredReview = {
       id: crypto.randomUUID(),
       productId,
       userId: user.id,
@@ -242,6 +242,13 @@ export default function BuyerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {products.map((product) => {
             const reviews = reviewsDB[product.id] || [];
+            const displayReviews: ReviewCard[] = reviews.map((review) => ({
+              id: review.id,
+              user: review.userId,
+              role: "buyer",
+              rating: review.rating,
+              comment: review.comment,
+            }));
             const avg = reviews.length > 0
                 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
                 : 0;
@@ -287,7 +294,7 @@ export default function BuyerPage() {
                     </div>
                   </div>
 
-                  <ReviewList reviews={reviews} />
+                  <ReviewList reviews={displayReviews} />
 
                   <div className="pt-4 border-t border-neutral-800 space-y-3">
                     <div className="flex items-center gap-2">

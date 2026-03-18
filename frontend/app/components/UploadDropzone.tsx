@@ -9,6 +9,8 @@ export default function UploadDropzone({
   onUpload: (url: string) => void;
 }) {
   const [uploading, setUploading] = useState(false);
+  const apiBaseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -20,7 +22,7 @@ export default function UploadDropzone({
     setUploading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/upload", {
+      const res = await fetch(`${apiBaseUrl}/api/upload`, {
         method: "POST",
         body: formData,
       });

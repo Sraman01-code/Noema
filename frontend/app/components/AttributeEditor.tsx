@@ -11,6 +11,20 @@ type Props = {
 
 export default function AttributeEditor({ data, onChange, autoPrice, onPriceChange }: Props) {
   function updateField<K extends keyof ProductAnalysis>(key: K, value: ProductAnalysis[K]) {
+    if (key === "category" && typeof value === "string") {
+      const categoryPath = value
+        .split(/>|\/+/)
+        .map((part) => part.trim())
+        .filter(Boolean);
+
+      onChange({
+        ...data,
+        category: value,
+        categoryPath: categoryPath.length > 0 ? categoryPath : data.categoryPath,
+      });
+      return;
+    }
+
     onChange({ ...data, [key]: value });
   }
 
