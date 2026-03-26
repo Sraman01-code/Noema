@@ -22,18 +22,18 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
 
   if (reviews.length === 0) {
     return (
-      <div className="bg-neutral-900 rounded-xl p-4 text-sm text-neutral-400">
+      <div className="rounded-xl bg-[#09090b] border border-[#1e1e24] p-4 text-sm text-[#63637a] text-center">
         No reviews yet.
       </div>
     );
   }
 
   return (
-    <div className="space-y-2">
-      <div className="flex justify-end gap-2 text-xs text-neutral-400">
+    <div className="space-y-2.5">
+      <div className="flex justify-end gap-2 text-xs text-[#63637a]">
         <span>Sort:</span>
         <select
-          className="bg-neutral-800 rounded px-2 py-1"
+          className="bg-[#111114] border border-[#1e1e24] rounded-lg px-2.5 py-1 text-[#a1a1aa] outline-none focus:border-violet-500/40 transition-colors cursor-pointer"
           value={sort}
           onChange={(e) => setSort(e.target.value as any)}
         >
@@ -44,22 +44,27 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
       </div>
 
       {sorted.map((r) => (
-        <div key={r.id} className="bg-neutral-900 rounded-xl p-4 space-y-1 hover:glow transition">
+        <div key={r.id} className="rounded-xl bg-[#09090b] border border-[#1e1e24] p-3.5 space-y-1.5 hover:border-[#2a2a34] transition-colors">
           <div className="flex items-center justify-between">
-            <span className="font-medium">
-              {r.user} {r.role === "buyer" && <span className="text-xs text-green-400">Buyer</span>}
-            </span>
-            <span className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-white">{r.user}</span>
+              {r.role === "buyer" && (
+                <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/15">
+                  Buyer
+                </span>
+              )}
+            </div>
+            <span className="flex items-center gap-0.5">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
-                  size={14}
-                  className={i < r.rating ? "text-yellow-400" : "text-neutral-600"}
+                  size={12}
+                  className={i < r.rating ? "text-amber-400 fill-amber-400" : "text-[#2a2a34]"}
                 />
               ))}
             </span>
           </div>
-          <p className="text-xs text-neutral-400">{r.comment}</p>
+          <p className="text-xs text-[#a1a1aa] leading-relaxed">{r.comment}</p>
         </div>
       ))}
     </div>

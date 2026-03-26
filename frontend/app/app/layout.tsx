@@ -4,8 +4,8 @@ import { AuthProvider } from "@/lib/auth";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AI Product Listing",
-  description: "Automated product listing system",
+  title: "Noema — Premium Marketplace",
+  description: "Discover and trade premium products on Noema",
 };
 
 export default function RootLayout({
@@ -15,10 +15,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-neutral-950 text-white min-h-screen flex flex-col">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-[#09090b] text-[#f0f0f3] min-h-screen flex flex-col antialiased">
         <AuthProvider>
           <NavBar />
-          {/* Pages control their own layout */}
           {children}
         </AuthProvider>
       </body>

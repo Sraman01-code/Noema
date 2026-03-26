@@ -39,52 +39,72 @@ export default function AttributeEditor({ data, onChange, autoPrice, onPriceChan
   }
 
   return (
-    <div className="bg-neutral-900 rounded-xl p-6 space-y-4">
-      <h3 className="text-lg font-medium">Edit Listing Details</h3>
+    <div className="rounded-xl bg-[#09090b] border border-[#1e1e24] p-5 space-y-4">
+      <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <div className="h-1 w-1 rounded-full bg-violet-500" />
+        Edit Listing Details
+      </h3>
 
-      <input
-        className="w-full bg-neutral-800 rounded-md px-3 py-2 text-sm"
-        value={data.name}
-        onChange={(e) => updateField("name", e.target.value)}
-        placeholder="Product name"
-      />
+      <div className="space-y-3">
+        <div className="space-y-1.5">
+          <label className="micro-label text-[#63637a] ml-0.5">Product Name</label>
+          <input
+            className="input-field"
+            value={data.name}
+            onChange={(e) => updateField("name", e.target.value)}
+            placeholder="Product name"
+          />
+        </div>
 
-      <input
-        className="w-full bg-neutral-800 rounded-md px-3 py-2 text-sm"
-        value={data.category}
-        onChange={(e) => updateField("category", e.target.value)}
-        placeholder="Category"
-      />
+        <div className="space-y-1.5">
+          <label className="micro-label text-[#63637a] ml-0.5">Category</label>
+          <input
+            className="input-field"
+            value={data.category}
+            onChange={(e) => updateField("category", e.target.value)}
+            placeholder="Category"
+          />
+        </div>
+      </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <input
-          className="bg-neutral-800 rounded-md px-3 py-2 text-sm"
-          value={data.attributes.color}
-          onChange={(e) => updateAttribute("color", e.target.value)}
-          placeholder="Color"
-        />
-        <input
-          className="bg-neutral-800 rounded-md px-3 py-2 text-sm"
-          value={data.attributes.material}
-          onChange={(e) => updateAttribute("material", e.target.value)}
-          placeholder="Material"
-        />
-        <input
-          className="bg-neutral-800 rounded-md px-3 py-2 text-sm"
-          value={data.attributes.condition}
-          onChange={(e) => updateAttribute("condition", e.target.value)}
-          placeholder="Condition"
-        />
+        <div className="space-y-1.5">
+          <label className="micro-label text-[#63637a] ml-0.5">Color</label>
+          <input
+            className="input-field"
+            value={data.attributes.color}
+            onChange={(e) => updateAttribute("color", e.target.value)}
+            placeholder="Color"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label className="micro-label text-[#63637a] ml-0.5">Material</label>
+          <input
+            className="input-field"
+            value={data.attributes.material}
+            onChange={(e) => updateAttribute("material", e.target.value)}
+            placeholder="Material"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label className="micro-label text-[#63637a] ml-0.5">Condition</label>
+          <input
+            className="input-field"
+            value={data.attributes.condition}
+            onChange={(e) => updateAttribute("condition", e.target.value)}
+            placeholder="Condition"
+          />
+        </div>
       </div>
 
       {autoPrice != null && onPriceChange && (
-        <div className="mt-3">
-          <label className="text-xs text-neutral-400">Price ($)</label>
+        <div className="space-y-1.5 pt-1">
+          <label className="micro-label text-[#63637a] ml-0.5">Price ($)</label>
           <input
             type="number"
             value={autoPrice}
             onChange={(e) => onPriceChange(Number(e.target.value))}
-            className="w-full bg-neutral-800 rounded-md px-3 py-2 text-sm"
+            className="input-field font-mono"
           />
         </div>
       )}

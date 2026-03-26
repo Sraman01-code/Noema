@@ -13,7 +13,6 @@ export default function AuthPage() {
   useEffect(() => {
     if (!hydrated) return;
     if (!user) return;
-    if (user.isGuest) return;
 
     router.replace(user.role === "buyer" ? "/buyer" : "/seller");
   }, [user, hydrated, router]);

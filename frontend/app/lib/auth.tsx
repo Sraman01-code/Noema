@@ -51,6 +51,21 @@ const getUsersDB = (): Record<string, StoredUser> =>
 const saveUsersDB = (db: Record<string, StoredUser>) =>
   localStorage.setItem("users_db", JSON.stringify(db));
 
+const syncStoredUser = (user: User) => {
+  if (user.isGuest) return;
+
+  const db = getUsersDB();
+  const existing = db[user.email];
+  if (!existing) return;
+
+  db[user.email] = {
+    ...existing,
+    ...user,
+  };
+
+  saveUsersDB(db);
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [hydrated, setHydrated] = useState(false);
@@ -64,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const persistSession = (u: User) => {
     setUser(u);
     localStorage.setItem("auth_user", JSON.stringify(u));
+    syncStoredUser(u);
   };
 
   const logout = () => {
@@ -157,13 +173,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkout = () => {
     if (!user) return { success: false, message: "Not logged in." };
-
-    if (user.isGuest) {
-      return {
-        success: false,
-        message: "Please create an account to complete checkout.",
-      };
-    }
 
     const total = user.cart.reduce(
       (sum, item) => sum + item.price * item.quantity,

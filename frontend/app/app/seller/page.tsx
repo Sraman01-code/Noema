@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Package, Wallet } from "lucide-react";
 import AttributeEditor from "@/components/AttributeEditor";
 import ProductCard from "@/components/ProductCard";
 import UploadDropzone from "@/components/UploadDropzone";
@@ -23,6 +23,10 @@ function createDraftAnalysis(): ProductAnalysis {
       condition: "New",
     },
   };
+}
+
+function getSellerProducts(sellerId: string) {
+  return getProducts().filter((product) => product.sellerId === sellerId);
 }
 
 export default function SellerPage() {
@@ -47,7 +51,7 @@ export default function SellerPage() {
       return;
     }
 
-    setProducts(getProducts());
+    setProducts(getSellerProducts(user.id));
   }, [hydrated, router, user]);
 
   const handleCreateListing = () => {
@@ -73,64 +77,86 @@ export default function SellerPage() {
     };
 
     addProduct(listing);
-    setProducts(getProducts());
+    setProducts(getSellerProducts(user.id));
     setDraft(createDraftAnalysis());
     setPrice(79.99);
     setImageUrl("");
   };
 
   const handleDeleteListing = (productId: string) => {
-    setProducts(removeProduct(productId));
+    if (!user || user.role !== "seller") return;
+
+    const ownedProduct = getSellerProducts(user.id).some(
+      (product) => product.id === productId
+    );
+
+    if (!ownedProduct) return;
+
+    removeProduct(productId);
+    setProducts(getSellerProducts(user.id));
   };
 
   if (!hydrated || !user || user.role !== "seller") {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-neutral-950">
-        <div className="text-sm text-neutral-400 tracking-widest animate-pulse">
-          AUTHENTICATING...
+      <main className="min-h-screen flex items-center justify-center bg-[#09090b]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-violet-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-[#63637a] text-sm tracking-widest animate-pulse">AUTHENTICATING...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen p-6 bg-neutral-950 text-white relative overflow-hidden">
+    <main className="min-h-screen relative overflow-hidden">
       <div className="bg-grid absolute inset-0 pointer-events-none" />
-      <div className="bg-glow-orb pointer-events-none" />
-      <div className="bg-glow-orb delay pointer-events-none" />
-      <div className="scanline pointer-events-none" />
+      <div className="bg-glow-orb absolute -top-40 -left-40 pointer-events-none" />
+      <div className="bg-glow-orb delay absolute -bottom-40 -right-40 pointer-events-none" />
+      <div className="scanline absolute inset-0 pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto space-y-8 relative z-10">
-        <header className="glass glow rounded-xl p-6 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-6 py-10 relative z-10 space-y-8">
+        {/* Header */}
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-[#1e1e24]">
           <div>
-            <p className="text-xs tracking-[0.25em] text-indigo-400">
-              SELLER STUDIO
-            </p>
-            <h1 className="text-2xl font-bold">Manage listings</h1>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/[0.08] border border-violet-500/[0.12]">
+                <Package size={12} className="text-violet-400" />
+                <span className="text-[11px] font-semibold text-violet-400 tracking-wide uppercase">
+                  Seller Studio
+                </span>
+              </div>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Manage Listings</h1>
           </div>
 
-          <div className="text-right">
-            <p className="text-sm font-medium">{user.name}</p>
-            <p className="text-xs text-indigo-400">
-              Balance: {formatBalance(user.balance)}
-            </p>
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.03] border border-[#1e1e24]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/[0.1]">
+              <Wallet size={16} className="text-violet-400" />
+            </div>
+            <div>
+              <p className="text-[13px] font-bold text-white">{user.name}</p>
+              <p className="text-[10px] font-semibold text-[#a78bfa] tabular-nums">
+                {formatBalance(user.balance)}
+              </p>
+            </div>
           </div>
         </header>
 
-        <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-4">
-            <div className="glass rounded-2xl p-5 space-y-4">
-              <div className="flex items-center justify-between">
+        <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          {/* Create Listing */}
+          <div className="space-y-5">
+            <div className="rounded-2xl bg-[#111114] border border-[#1e1e24] p-6 space-y-5">
+              <div className="flex items-start justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold">Create listing</h2>
-                  <p className="text-sm text-neutral-400">
-                    Upload the image, fill in the analysis, then publish the item.
+                  <h2 className="text-lg font-bold text-white">Create Listing</h2>
+                  <p className="text-sm text-[#63637a] mt-1">
+                    Upload image, fill details, then publish.
                   </p>
                 </div>
 
                 <button
                   onClick={handleCreateListing}
-                  className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-black hover:opacity-90 transition"
+                  className="btn-primary py-2.5 px-5 text-sm"
                 >
                   <Plus size={16} />
                   Publish
@@ -140,11 +166,11 @@ export default function SellerPage() {
               <UploadDropzone onUpload={setImageUrl} />
 
               {imageUrl && (
-                <div className="rounded-xl border border-neutral-800 p-3">
+                <div className="rounded-xl overflow-hidden border border-[#1e1e24]">
                   <img
                     src={imageUrl}
                     alt="Uploaded preview"
-                    className="h-48 w-full rounded-lg object-cover"
+                    className="h-48 w-full object-cover"
                   />
                 </div>
               )}
@@ -158,35 +184,49 @@ export default function SellerPage() {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="glass rounded-2xl p-5">
-              <h2 className="text-lg font-semibold">Your listings</h2>
-              <p className="text-sm text-neutral-400">
-                {products.length} item{products.length === 1 ? "" : "s"} in store.
-              </p>
+          {/* Listings */}
+          <div className="space-y-5">
+            <div className="flex items-center justify-between px-1">
+              <h2 className="text-lg font-bold text-white">Your Listings</h2>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-[#1e1e24]">
+                <div className="h-1.5 w-1.5 rounded-full bg-violet-500 shadow-[0_0_6px_rgba(139,92,246,0.5)]" />
+                <span className="text-[11px] font-semibold text-[#a1a1aa] tabular-nums">
+                  {products.length} {products.length === 1 ? "item" : "items"}
+                </span>
+              </div>
             </div>
 
-            <div className="grid gap-4">
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  image={product.image}
-                  analysis={product.analysis}
-                  price={product.price}
-                  confidence={product.analysis.confidence}
-                  actions={
-                    <button
-                      onClick={() => handleDeleteListing(product.id)}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-red-700 px-3 py-2 text-sm text-red-300 hover:bg-red-700/10 transition"
-                    >
-                      <Trash2 size={14} />
-                      Delete
-                    </button>
-                  }
-                />
-              ))}
-            </div>
+            {products.length === 0 ? (
+              <div className="rounded-2xl bg-[#111114] border border-[#1e1e24] py-16 flex flex-col items-center gap-3 text-center">
+                <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-[#1e1e24] flex items-center justify-center">
+                  <Package size={20} className="text-[#3a3a4c]" />
+                </div>
+                <p className="text-sm text-[#a1a1aa] font-medium">No listings yet</p>
+                <p className="text-xs text-[#63637a]">Create your first listing to get started</p>
+              </div>
+            ) : (
+              <div className="grid gap-4">
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    id={product.id}
+                    image={product.image}
+                    analysis={product.analysis}
+                    price={product.price}
+                    confidence={product.analysis.confidence}
+                    actions={
+                      <button
+                        onClick={() => handleDeleteListing(product.id)}
+                        className="btn-danger w-full py-2.5 text-xs"
+                      >
+                        <Trash2 size={14} />
+                        Delete
+                      </button>
+                    }
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </div>
